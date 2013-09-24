@@ -99,6 +99,14 @@ soong_config_module_type {
     ],
 }
 
+cc_library_static {
+    name: "vendor_init",
+    recovery_available: true,
+    srcs: [
+        "vendor_init.cpp",
+    ],
+}
+
 libinit_cc_defaults {
     name: "init_defaults",
     sanitize: {
@@ -223,7 +231,10 @@ cc_defaults {
     ],
     whole_static_libs: [
         "libcap",
-    ],
+    ] + select(soong_config_variable("libinit", "vendor_init_lib"), {
+        any @ flag_val: [flag_val],
+        default: ["vendor_init"],
+    }),
     header_libs: ["bootimg_headers"],
     proto: {
         type: "lite",
