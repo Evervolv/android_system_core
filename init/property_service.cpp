@@ -128,6 +128,8 @@ struct PropertyAuditData {
     const char* name;
 };
 
+static bool weaken_prop_override_security = false;
+
 static int PropertyAuditCallback(void* data, security_class_t /*cls*/, char* buf, size_t len) {
     auto* d = reinterpret_cast<PropertyAuditData*>(data);
 
@@ -397,8 +399,8 @@ static std::optional<uint32_t> PropertySet(const std::string& name, const std::s
 
     prop_info* pi = (prop_info*)__system_property_find(name.c_str());
     if (pi != nullptr) {
-        // ro.* properties are actually "write-once".
-        if (StartsWith(name, "ro.")) {
+        // ro.* properties are actually "write-once", unless the system decides to
+        if (StartsWith(name, "ro.") && !weaken_prop_override_security) {
             *error = "Read-only property was already set";
             return {PROP_ERROR_READ_ONLY_PROPERTY};
         }
@@ -1419,8 +1421,13 @@ void PropertyInit() {
         LOG(FATAL) << "Failed to load serialized property info file";
     }
 
-    // Report valid verified boot chain to help pass Google SafetyNet integrity checks
+
+    // Report valid verified boot chain to help pass Google SafetyNet integrity checks.
+    // Weaken property override security during execution, restore the normal property
+    // override security after execution.
+    weaken_prop_override_security = true;
     SetSafetyNetProps();
+    weaken_prop_override_security = false;
 
     // If arguments are passed both on the command line and in DT,
     // properties set in DT always have priority over the command-line ones.
