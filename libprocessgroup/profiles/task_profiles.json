@@ -466,6 +466,33 @@
         }
       ]
     },
+
+    {
+      "Name": "BlkIOForeground",
+      "Actions" : [
+        {
+          "Name" : "JoinCgroup",
+          "Params" :
+          {
+            "Controller": "blkio",
+            "Path": ""
+          }
+        }
+      ]
+    },
+    {
+      "Name": "BlkIOBackground",
+      "Actions" : [
+        {
+          "Name" : "JoinCgroup",
+          "Params" :
+          {
+            "Controller": "blkio",
+            "Path": "bg"
+          }
+        }
+      ]
+    },
     {
       "Name": "LowIoPriority",
       "Actions": [
@@ -552,7 +579,7 @@
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "foreground"
+            "Path": "system-background"
           }
         }
       ]
@@ -565,7 +592,7 @@
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "foreground"
+            "Path": "system-background"
           }
         }
       ]
