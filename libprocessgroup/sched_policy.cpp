@@ -48,9 +48,10 @@ int set_cpuset_policy(int tid, SchedPolicy policy) {
         case SP_BACKGROUND:
             return SetTaskProfiles(tid, {"CPUSET_SP_BACKGROUND"}, true) ? 0 : -1;
         case SP_FOREGROUND:
+            return SetTaskProfiles(tid, {"CPUSET_SP_FOREGROUND"}, true) ? 0 : -1;
         case SP_AUDIO_APP:
         case SP_AUDIO_SYS:
-            return SetTaskProfiles(tid, {"CPUSET_SP_FOREGROUND"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"CPUSET_SP_FOREGROUND", "AudioAppCapacity"}, true) ? 0 : -1;
         case SP_TOP_APP:
             return SetTaskProfiles(tid, {"CPUSET_SP_TOP_APP"}, true) ? 0 : -1;
         case SP_SYSTEM:
@@ -178,6 +179,8 @@ static int get_sched_policy_from_group(const std::string& group, SchedPolicy* po
         *policy = SP_TOP_APP;
     } else if (group == "restricted") {
         *policy = SP_RESTRICTED;
+    } else if (group == "audio-app") {
+        *policy = SP_AUDIO_APP;
     } else {
         errno = ERANGE;
         return -1;

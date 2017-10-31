@@ -16,6 +16,11 @@
       "File": "top-app/cpus"
     },
     {
+      "Name": "AudioAppCapacityCPUs",
+      "Controller": "cpuset",
+      "File": "audio-app/cpus"
+    },
+    {
       "Name": "MemStats",
       "Controller": "memory",
       "File": "memory.stat"
@@ -193,6 +198,19 @@
           {
             "Controller": "cpu",
             "Path": "camera-daemon"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "AudioAppPerformance",
+      "Actions" : [
+        {
+          "Name" : "JoinCgroup",
+          "Params" :
+          {
+            "Controller": "schedtune",
+            "Path": "audio-app"
           }
         }
       ]
@@ -431,6 +449,19 @@
           {
             "Controller": "cpuset",
             "Path": "camera-daemon"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "AudioAppCapacity",
+      "Actions" : [
+        {
+          "Name" : "JoinCgroup",
+          "Params" :
+          {
+            "Controller": "cpuset",
+            "Path": "audio-app"
           }
         }
       ]
