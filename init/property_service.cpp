@@ -1250,7 +1250,9 @@ void PropertyLoadBootDefaults() {
     property_initialize_ro_cpu_abilist();
     property_initialize_ro_vendor_api_level();
 
-    update_sys_usb_config();
+    if (android::base::GetBoolProperty("ro.persistent_properties.ready", false)) {
+        update_sys_usb_config();
+    }
 }
 
 void PropertyLoadDerivedDefaults() {
