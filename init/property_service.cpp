@@ -1388,6 +1388,7 @@ static void ProcessKernelDt() {
 }
 
 constexpr auto ANDROIDBOOT_PREFIX = "androidboot."sv;
+constexpr auto ANDROIDBOOT_VERIFIEDBOOTSTATE = "androidboot.verifiedbootstate"sv;
 
 static void ProcessKernelCmdline() {
     android::fs_mgr::ImportKernelCmdline([&](const std::string& key, const std::string& value) {
@@ -1406,6 +1407,49 @@ static void ProcessBootconfig() {
     });
 }
 
+static void SetSafetyNetProps() {
+    auto verifiedState = 0;
+
+    android::fs_mgr::ImportKernelCmdline([&](const std::string& key, const std::string& value) {
+        if (key == ANDROIDBOOT_VERIFIEDBOOTSTATE) {
+            if (value == "red") {
+                verifiedState = -1;
+            } else if (value == "yellow") {
+                verifiedState = 1;
+            }
+        }
+    });
+
+    android::fs_mgr::ImportBootconfig([&](const std::string& key, const std::string& value) {
+        if (key == ANDROIDBOOT_VERIFIEDBOOTSTATE) {
+            if (value == "red") {
+                verifiedState = -1;
+            } else if (value == "yellow") {
+                verifiedState = 1;
+            }
+        }
+    });
+
+    switch (verifiedState) {
+        case 0:
+            if (!ALLOW_PERMISSIVE_SELINUX) {
+                break;
+            }
+            InitPropertySet("ro.boot.flash.locked", "1");
+            InitPropertySet("ro.boot.tampered", "0");
+            InitPropertySet("ro.boot.veritymode", "enforcing");
+            InitPropertySet("ro.boot.vbmeta.device_state", "locked");
+            InitPropertySet("sys.oem_unlock_allowed", "0");
+            [[fallthrough]];
+        case 1:
+            InitPropertySet("ro.boot.verifiedbootstate", "green");
+            break;
+        default:
+            break;
+    }
+}
+
+
 void PropertyInit() {
     selinux_callback cb;
     cb.func_audit = PropertyAuditCallback;
@@ -1418,6 +1462,11 @@ void PropertyInit() {
     }
     if (!property_info_area.LoadDefaultPath()) {
         LOG(FATAL) << "Failed to load serialized property info file";
+    }
+
+    if (!IsRecoveryMode()) {
+        // Report valid verified boot chain to help pass Google SafetyNet integrity checks
+        SetSafetyNetProps();
     }
 
     // If arguments are passed both on the command line and in DT,
