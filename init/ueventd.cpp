@@ -310,7 +310,7 @@ static UeventdConfiguration GetConfiguration() {
     std::vector<LegacyPathInfo> legacy_paths{
             {"/vendor/ueventd.rc", "/vendor/etc/ueventd.rc"},
             {"/odm/ueventd.rc", "/odm/etc/ueventd.rc"},
-            {"/ueventd." + hardware + ".rc", "another ueventd.rc file"}};
+            {"/ueventd." + hardware + ".rc", "/vendor/etc/ueventd." + hardware + ".rc"}};
 
     std::vector<std::string> canonical{"/system/etc/ueventd.rc"};
 
