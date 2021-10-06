@@ -242,7 +242,8 @@ AvbUniquePtr AvbHandle::LoadAndVerifyVbmeta(
     bool verification_disabled = ((AvbVBMetaImageFlags)vbmeta_header->flags &
                                   AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED);
     bool hashtree_disabled =
-            ((AvbVBMetaImageFlags)vbmeta_header->flags & AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED);
+            ((AvbVBMetaImageFlags)vbmeta_header->flags & AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED) ||
+            allow_verification_error;
     if (verification_disabled) {
         avb_handle->status_ = AvbHandleStatus::kVerificationDisabled;
     } else if (hashtree_disabled) {
@@ -460,7 +461,8 @@ AvbUniquePtr AvbHandle::Open() {
 
         // Checks whether FLAGS_HASHTREE_DISABLED is set.
         bool hashtree_disabled = ((AvbVBMetaImageFlags)vbmeta_header.flags &
-                                  AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED);
+                                  AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED) ||
+                                  allow_verification_error;
         if (hashtree_disabled) {
             avb_handle->status_ = AvbHandleStatus::kHashtreeDisabled;
         }
