@@ -1364,12 +1364,12 @@ static void ProcessBootconfig() {
 }
 
 static void SetSafetyNetProps() {
-#ifdef RECOVERY
     // Bail out if this is recovery, fastbootd, or anything other than a normal boot.
     // fastbootd, in particular, needs the real values so it can allow flashing on
     // unlocked bootloaders.
-    return;
-#endif
+    if (IsRecoveryMode()) {
+        return;
+    }
 
     // Check whether verified boot state is yellow
     auto isVerifiedBootYellow = false;
