@@ -1049,8 +1049,10 @@ static bool load_buf_fd(unique_fd fd, struct fastboot_buffer* buf) {
             return false;
         }
         sparse_file_destroy(s);
+        buf->file_type = FB_BUFFER_SPARSE;
     } else {
         buf->image_size = sz;
+        buf->file_type = FB_BUFFER_FD;
     }
 
     lseek(fd.get(), 0, SEEK_SET);
@@ -1188,6 +1190,15 @@ static void copy_avb_footer(const std::string& partition, struct fastboot_buffer
         should_flash_in_userspace(partition)) {
         return;
     }
+
+    // If the image is sparse, moving the footer will simply corrupt the sparse
+    // format, so currently we don't support moving the footer on sparse files.
+    if (buf->file_type == FB_BUFFER_SPARSE) {
+        LOG(ERROR) << "Warning: skip copying " << partition << " image avb footer due to sparse "
+                   << "image.";
+        return;
+    }
+
     // If overflows and negative, it should be < buf->sz.
     int64_t partition_size = static_cast<int64_t>(get_partition_size(partition));
 
