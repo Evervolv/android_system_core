@@ -46,16 +46,16 @@ int set_cpuset_policy(int tid, SchedPolicy policy) {
 
     switch (policy) {
         case SP_BACKGROUND:
-            return SetTaskProfiles(tid, {"CPUSET_SP_BACKGROUND", "BlkIOBackground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"CPUSET_SP_BACKGROUND"}, true) ? 0 : -1;
         case SP_FOREGROUND:
-            return SetTaskProfiles(tid, {"CPUSET_SP_FOREGROUND", "BlkIOForeground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"CPUSET_SP_FOREGROUND"}, true) ? 0 : -1;
         case SP_AUDIO_APP:
         case SP_AUDIO_SYS:
-            return SetTaskProfiles(tid, {"CPUSET_SP_FOREGROUND", "AudioAppCapacity", "BlkIOForeground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"CPUSET_SP_FOREGROUND", "AudioAppCapacity"}, true) ? 0 : -1;
         case SP_TOP_APP:
-            return SetTaskProfiles(tid, {"CPUSET_SP_TOP_APP", "BlkIOBackground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"CPUSET_SP_TOP_APP"}, true) ? 0 : -1;
         case SP_SYSTEM:
-            return SetTaskProfiles(tid, {"CPUSET_SP_SYSTEM", "BlkIOForeground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"CPUSET_SP_SYSTEM"}, true) ? 0 : -1;
         case SP_RESTRICTED:
             return SetTaskProfiles(tid, {"CPUSET_SP_RESTRICTED"}, true) ? 0 : -1;
         default:
@@ -118,17 +118,17 @@ int set_sched_policy(int tid, SchedPolicy policy) {
 
     switch (policy) {
         case SP_BACKGROUND:
-            return SetTaskProfiles(tid, {"SCHED_SP_BACKGROUND", "BlkIOBackground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"SCHED_SP_BACKGROUND"}, true) ? 0 : -1;
         case SP_FOREGROUND:
         case SP_AUDIO_APP:
         case SP_AUDIO_SYS:
-            return SetTaskProfiles(tid, {"SCHED_SP_FOREGROUND", "BlkIOForeground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"SCHED_SP_FOREGROUND"}, true) ? 0 : -1;
         case SP_TOP_APP:
-            return SetTaskProfiles(tid, {"SCHED_SP_TOP_APP", "BlkIOForeground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"SCHED_SP_TOP_APP"}, true) ? 0 : -1;
         case SP_SYSTEM:
             return SetTaskProfiles(tid, {"SCHED_SP_SYSTEM"}, true) ? 0 : -1;
         case SP_RT_APP:
-            return SetTaskProfiles(tid, {"SCHED_SP_RT_APP", "BlkIOForeground"}, true) ? 0 : -1;
+            return SetTaskProfiles(tid, {"SCHED_SP_RT_APP"}, true) ? 0 : -1;
         default:
             return SetTaskProfiles(tid, {"SCHED_SP_DEFAULT"}, true) ? 0 : -1;
     }
