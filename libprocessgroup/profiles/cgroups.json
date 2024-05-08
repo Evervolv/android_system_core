@@ -24,8 +24,8 @@
     {
       "Controller": "memory",
       "Path": "/dev/memcg",
-      "Mode": "0755",
-      "UID": "system",
+      "Mode": "0700",
+      "UID": "root",
       "GID": "system",
       "Optional": true
     }
