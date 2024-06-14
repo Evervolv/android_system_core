@@ -193,6 +193,7 @@ libinit_cc_defaults {
         "libext4_utils",
         "libfs_mgr",
         "libgsi",
+        "libkeyutils",
         "liblog",
         "liblogwrap",
         "liblp",
