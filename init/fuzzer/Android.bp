@@ -31,6 +31,7 @@ cc_defaults {
         "libbase",
         "libfs_mgr",
         "libhidl-gen-utils",
+        "libkeyutils",
         "liblog",
         "libprocessgroup",
         "libselinux",
