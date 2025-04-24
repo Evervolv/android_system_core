@@ -221,7 +221,6 @@ cc_defaults {
     defaults: [
         "init_defaults",
         "selinux_policy_version",
-        "vendor_init_defaults",
     ],
     srcs: init_common_sources + init_device_sources,
     export_include_dirs: ["."],
@@ -230,7 +229,10 @@ cc_defaults {
     ],
     whole_static_libs: [
         "libcap",
-    ],
+    ] + select(soong_config_variable("libinit", "vendor_init_lib"), {
+        any @ flag_val: [flag_val],
+        default: ["vendor_init"],
+    }),
     header_libs: ["bootimg_headers"],
     proto: {
         type: "lite",
